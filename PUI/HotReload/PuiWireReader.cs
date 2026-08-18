@@ -263,6 +263,16 @@ namespace Polaris.PUI.HotReload
                         payload = new PuiMethodNameParams { MethodName = r.ReadString() };
                         break;
 
+                    case PuiWireOpcode.AddCustom:
+                        payload = new PuiCustomParams
+                        {
+                            Name = r.ReadString(),
+                            Width = r.ReadDouble(),
+                            Height = r.ReadDouble(),
+                            BackendType = r.ReadString(),
+                        };
+                        break;
+
                     // 无载荷操作码；未知操作码同样当无载荷跳过。
                     case PuiWireOpcode.SetFocusable:
                     case PuiWireOpcode.Br:

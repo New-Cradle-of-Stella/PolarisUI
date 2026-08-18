@@ -16,7 +16,8 @@ namespace Polaris.PUI.Wire
     public static class PuiProtocol
     {
         // v2：AddImage 载荷追加了 PuiImageParams.ImageResource。
-        public const int Version = 2;
+        // v3：新增 AddCustom 操作码 + PuiCustomParams 载荷（自定义控件）。
+        public const int Version = 3;
     }
 
     /// <summary>线协议操作码：与 <c>IPuiEmitter</c> 方法一一对应，由编辑器写出、游戏进程读回执行。</summary>
@@ -40,6 +41,7 @@ namespace Polaris.PUI.Wire
         AddColorCell = 15,
         AddImage = 16,
         OnBuildCompleted = 17,
+        AddCustom = 18,
     }
 
     /// <summary>对应 <c>nel.UiBoxDesignerFamily.MASKTYPE</c>。</summary>
@@ -330,6 +332,22 @@ namespace Polaris.PUI.Wire
 
         /// <summary><c>[PolarisResource]</c> static 字段引用（如 <c>MyMod.Res.testImage</c>），非空时优先于 <see cref="ImageSource"/>。两者皆空则不设置图片。</summary>
         public string ImageResource;
+    }
+
+    /// <summary>
+    /// 自定义控件（Custom）：占位尺寸走 Width/Height（同 Image），实际绘制内容交给
+    /// <see cref="BackendType"/> 指名的一个实现了 <c>Polaris.PUI.IPuiCustomControl</c> 的类
+    /// （必须有公共无参构造函数），两条落地路径都靠反射按这个类型名 <c>new()</c> 出实例——
+    /// 因此这个类型必须是已经编译好、已加载的后端代码，不支持像回调方法名那样留空。
+    /// </summary>
+    public sealed class PuiCustomParams
+    {
+        public string Name;
+        public double Width;
+        public double Height;
+
+        /// <summary>实现 <c>Polaris.PUI.IPuiCustomControl</c> 的后端类型全名（如 <c>MyMod.Controls.MyGraphControl</c>）。</summary>
+        public string BackendType;
     }
 
     /// <summary>一条热重载指令：操作码 + 载荷；SetFocusable/Br/SetDefaultLineAlign 没有载荷（Payload 为 null）。</summary>

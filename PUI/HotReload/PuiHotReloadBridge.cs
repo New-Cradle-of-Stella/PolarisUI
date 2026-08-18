@@ -89,6 +89,10 @@ namespace Polaris.PUI.HotReload
                     case PuiWireOpcode.OnBuildCompleted:
                         InvokeOnBuildCompleted(handler, ((PuiMethodNameParams)cmd.Payload).MethodName, designer);
                         break;
+
+                    case PuiWireOpcode.AddCustom:
+                        AddCustom(designer, (PuiCustomParams)cmd.Payload, handler);
+                        break;
                 }
             }
 
@@ -388,6 +392,53 @@ namespace Polaris.PUI.HotReload
                 (float)p.Width, (float)p.Height, (float)p.Scale);
 
             designer.addImg(data);
+        }
+
+        private static void AddCustom(UiBoxDesigner designer, PuiCustomParams p, IPUI handler)
+        {
+            var data = new DsnDataImg
+            {
+                name = p.Name ?? "",
+                swidth = (float)p.Width,
+                sheight = (float)p.Height,
+            };
+
+            FillImageBlock block = designer.addImg(data);
+            IPuiCustomControl control = ResolveCustomControl(p.BackendType, handler);
+            PuiCustomControl.Attach(data, block, control, (float)p.Width, (float)p.Height);
+        }
+
+        /// <summary>把 .pui 里填的后端类型全名反射解析成一个 <see cref="IPuiCustomControl"/> 实例；解析失败一律抛异常，交调用方回滚。</summary>
+        private static IPuiCustomControl ResolveCustomControl(string typeName, IPUI handler)
+        {
+            if (string.IsNullOrEmpty(typeName))
+            {
+                throw new InvalidOperationException("A Custom element has no BackendType set.");
+            }
+
+            Assembly assembly = handler.GetType().Assembly;
+            Type type = ResolveNestedType(assembly, typeName);
+            if (type == null)
+            {
+                throw new InvalidOperationException(
+                    $"Custom control backend type \"{typeName}\" was not found in assembly {assembly.GetName().Name}.");
+            }
+
+            if (!typeof(IPuiCustomControl).IsAssignableFrom(type))
+            {
+                throw new InvalidOperationException(
+                    $"Custom control backend type \"{typeName}\" does not implement Polaris.PUI.IPuiCustomControl.");
+            }
+
+            try
+            {
+                return (IPuiCustomControl)Activator.CreateInstance(type);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(
+                    $"Custom control backend type \"{typeName}\" could not be constructed (it needs a public parameterless constructor): {ex.Message}", ex);
+            }
         }
 
         private static UiBoxDesignerFamily.MASKTYPE ToMask(PuiMaskType mask) => mask switch
