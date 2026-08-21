@@ -5,7 +5,7 @@ namespace Polaris.UI
     /// </summary>
     public readonly struct PUIEdge
     {
-        /// <summary>保留的目标 key，表示退出整个状态机（<see cref="PUISolution.Fire"/> 命中时改为调用 <see cref="PUISolution.Stop"/>）。</summary>
+        /// <summary>保留的目标 key，表示退出整个状态机（<see cref="PUISolution.Fire(string, string)"/> 命中时改为调用 <see cref="PUISolution.Stop"/>）。</summary>
         public const string ExitNodeKey = "@Exit";
 
         public string SourceNodeKey { get; }
