@@ -444,7 +444,7 @@ namespace Polaris
             box.alignx = ALIGN.LEFT;
         }
 
-        /// <summary>页面最上方居中的 Polaris logo；图片取不到就整行跳过。换算交给 <see cref="PUI.PuiImage.Assign"/>，与 PUI 的 Image 元素共用实现。</summary>
+        /// <summary>页面最上方居中的 Polaris logo；图片取不到就整行跳过。换算交给 <see cref="UI.PuiImage.Assign"/>，与 PUI 的 Image 元素共用实现。</summary>
         static void Logo(UiBoxDesigner box)
         {
             MImage image = PolarisBrandImages.Logo;
@@ -460,7 +460,7 @@ namespace Polaris
                 swidth = box.use_w,
                 sheight = sheight,
             };
-            PUI.PuiImage.Assign(data, image, 0f, 0f, 1f, 1f, sheight, sheight, 1f);
+            UI.PuiImage.Assign(data, image, 0f, 0f, 1f, 1f, sheight, sheight, 1f);
 
             box.addImg(data);
             box.Br();

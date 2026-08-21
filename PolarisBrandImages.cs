@@ -5,7 +5,7 @@ using XX;
 
 namespace Polaris
 {
-    /// <summary>Polaris 随包分发的自带图片；硬编码在 <see cref="Infra.PathsAPI.PolarisRoot"/> 下，通过自身资源子系统（<see cref="PolarisResAPI"/>）加载。</summary>
+    /// <summary>Polaris 随包分发的自带图片；硬编码在 <see cref="Infra.PathsAPI.PolarisRoot"/> 下，通过自身资源子系统（<see cref="ResAPI"/>）加载。</summary>
     internal static class PolarisBrandImages
     {
         /// <summary>logo 的文件名（不含扩展名，探测规则同 <c>[PolarisResource]</c>）。</summary>
@@ -42,7 +42,7 @@ namespace Polaris
 
             try
             {
-                return PolarisResAPI.For("Polaris").Mount(root).Own.Image(name);
+                return ResAPI.For("Polaris").Mount(root).Own.Image(name);
             }
             catch (Exception ex)
             {

@@ -1,6 +1,6 @@
 using Polaris.Components;
 
-namespace Polaris.PUI
+namespace Polaris.UI
 {
     public sealed class PolarisUIComponent : PolarisComponent
     {
