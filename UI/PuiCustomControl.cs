@@ -6,11 +6,10 @@ using XX;
 namespace Polaris.UI
 {
     /// <summary>
-    /// 把一个 <see cref="IPuiCustomControl"/> 挂到占位控件上：占位控件是一个不赋图的 <see cref="DsnDataImg"/>
-    /// （只用来在 .pui 的自动排布里占一块 Width×Height 的地方），真正的内容由一个屏幕空间
-    /// <see cref="DrawingSurface"/> 绘制。首次构建、以及每次 <see cref="DrawNode.Invalidate"/> 时都会回调
-    /// <paramref name="control"/> 的 Draw；每帧把 Surface 位置同步到占位控件的实际屏幕坐标，让内容跟着所在
-    /// 窗口移动。编译期 codegen 与热重载两条路径共用这一个方法。
+    /// 把一个 <see cref="IPuiCustomControl"/> 挂到占位控件上：占位控件是一个不赋图的 <see cref="DsnDataImg"/>，
+    /// 只用来在 .pui 的自动排布里占一块 Width×Height 的地方，真正的内容由一个屏幕空间
+    /// <see cref="DrawingSurface"/> 绘制并每帧跟随其位置。首次构建、以及每次 <see cref="DrawNode.Invalidate"/>
+    /// 时都会回调 <paramref name="control"/> 的 Draw；编译期 codegen 与热重载两条路径共用这一个方法。
     /// </summary>
     public static class PuiCustomControl
     {
